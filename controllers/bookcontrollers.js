@@ -1,28 +1,19 @@
 import * as bookservices from '../services/bookservices.js';
 
 export const fetchAllBooks = async(req, res) => {
-    try {
-        const books = await bookservices.fetchAllBooks();
-        res.status(200).json(books);
-    } catch (e) {
-        console.log(e);
-        res.status(500).json({
-            error: 'Internal Server Error'
-        });
-    }
-};
-
+    const books = await bookservices.fetchAllBooks();
+    res.status(200).json(books);
+}
 export const createbook = async(req, res) => {
+    console.log(req);
+    const { name, author } = req.body;
+    const book = { name, author };
+
     try {
-        const { name, author } = req.body;
-        const book = { name, author };
-
         const bookId = await bookservices.createbook(book);
-
         res.status(201).json({
             success: true,
-            message: 'Book created successfully',
-            bookId: bookId
+            message: bookId
         });
     } catch (e) {
         console.log(e);
@@ -31,26 +22,16 @@ export const createbook = async(req, res) => {
         });
     }
 };
+export const editbook = async(req, res) => {
+    const { name, author } = req.body;
+    const { id } = req.params;
+    const book = { id: parseInt(id), name, author };
 
-// UPDATE BOOK
-export const updatebook = async(req, res) => {
     try {
-        const { id } = req.params;
-        const { name, author } = req.body;
-
-        const book = { name, author };
-        const result = await bookservices.updatebook(id, book);
-
-        if (result === 0) {
-            return res.status(404).json({
-                success: false,
-                message: 'Book not found'
-            });
-        }
-
+        const updatedbook = await bookservices.updatebook(book);
         res.status(200).json({
             success: true,
-            message: 'Book updated successfully'
+            message: updatedbook
         });
     } catch (e) {
         console.log(e);
@@ -59,24 +40,14 @@ export const updatebook = async(req, res) => {
         });
     }
 };
-
-// DELETE BOOK
 export const deletebook = async(req, res) => {
+    const { id } = req.params;
+
     try {
-        const { id } = req.params;
-
-        const result = await bookservices.deletebook(id);
-
-        if (result === 0) {
-            return res.status(404).json({
-                success: false,
-                message: 'Book not found'
-            });
-        }
-
+        const deletedbook = await bookservices.deletebook(parseInt(id));
         res.status(200).json({
             success: true,
-            message: 'Book deleted successfully'
+            message: deletedbook
         });
     } catch (e) {
         console.log(e);

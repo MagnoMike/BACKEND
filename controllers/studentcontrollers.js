@@ -1,43 +1,19 @@
 import * as studentservices from '../services/studentservices.js';
 
 export const fetchAllStudents = async(req, res) => {
-    try {
-        const students = await studentservices.fetchAllStudents();
-
-        res.status(200).json(students);
-    } catch (e) {
-        console.log(e);
-        res.status(500).json({
-            error: 'Internal Server Error'
-        });
-    }
+    const students = await studentservices.fetchAllStudents();
+    res.status(200).json(students);
 };
 
-export const createStudent = async(req, res) => {
+export const createstudent = async(req, res) => {
+    const { name, course } = req.body;
+    const student = { name, course };
+
     try {
-        const { name, course, year_level } = req.body;
-
-        if (!name ||
-            !course ||
-            year_level === undefined ||
-            year_level === null ||
-            year_level === ''
-        ) {
-            return res.status(400).json({
-                error: 'Name, course, and year level are required'
-            });
-        }
-
-        const studentId = await studentservices.createStudent({
-            name,
-            course,
-            year_level
-        });
-
+        const studentId = await studentservices.createstudent(student);
         res.status(201).json({
             success: true,
-            message: 'Student created successfully',
-            id: studentId
+            message: studentId
         });
     } catch (e) {
         console.log(e);
@@ -47,36 +23,16 @@ export const createStudent = async(req, res) => {
     }
 };
 
-// UPDATE STUDENT
-export const updateStudent = async(req, res) => {
+export const editstudent = async(req, res) => {
+    const { name, course } = req.body;
+    const { id } = req.params;
+    const student = { id: parseInt(id), name, course };
+
     try {
-        const { id } = req.params;
-        const { name, course, year_level } = req.body;
-
-        if (!name ||
-            !course ||
-            year_level === undefined ||
-            year_level === null ||
-            year_level === ''
-        ) {
-            return res.status(400).json({
-                error: 'Name, course, and year level are required'
-            });
-        }
-
-        const affectedRows = await studentservices.updateStudent(
-            id, { name, course, year_level }
-        );
-
-        if (affectedRows === 0) {
-            return res.status(404).json({
-                error: 'Student not found'
-            });
-        }
-
+        const updatedstudent = await studentservices.updatestudent(student);
         res.status(200).json({
             success: true,
-            message: 'Student updated successfully'
+            message: updatedstudent
         });
     } catch (e) {
         console.log(e);
@@ -86,22 +42,14 @@ export const updateStudent = async(req, res) => {
     }
 };
 
-// DELETE STUDENT
-export const deleteStudent = async(req, res) => {
+export const deletestudent = async(req, res) => {
+    const { id } = req.params;
+
     try {
-        const { id } = req.params;
-
-        const affectedRows = await studentservices.deleteStudent(id);
-
-        if (affectedRows === 0) {
-            return res.status(404).json({
-                error: 'Student not found'
-            });
-        }
-
+        const deletedstudent = await studentservices.deletestudent(parseInt(id));
         res.status(200).json({
             success: true,
-            message: 'Student deleted successfully'
+            message: deletedstudent
         });
     } catch (e) {
         console.log(e);

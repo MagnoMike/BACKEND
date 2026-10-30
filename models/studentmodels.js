@@ -1,26 +1,21 @@
 import pool from '../config/db.js';
 
 export const fetch = async() => {
-    const [rows] = await pool.query(
-        'SELECT * FROM students'
-    );
+    const [rows] = await pool.query('SELECT * FROM student');
     return rows;
 };
 
 export const insert = async(student) => {
     const [result] = await pool.query(
-        `INSERT INTO students (name, course, year_level)
-         VALUES (?, ?, ?)`, [student.name, student.course, student.year_level]
+        'INSERT INTO student (name, course) VALUES (?, ?)', [student.name, student.course]
     );
 
     return result.insertId;
 };
 
-export const update = async(id, student) => {
+export const update = async(student) => {
     const [result] = await pool.query(
-        `UPDATE students
-         SET name = ?, course = ?, year_level = ?
-         WHERE id = ?`, [student.name, student.course, student.year_level, id]
+        'UPDATE student SET name = ?, course = ? WHERE id = ?', [student.name, student.course, student.id]
     );
 
     return result.affectedRows;
@@ -28,7 +23,7 @@ export const update = async(id, student) => {
 
 export const remove = async(id) => {
     const [result] = await pool.query(
-        'DELETE FROM students WHERE id = ?', [id]
+        'DELETE FROM student WHERE id = ?', [id]
     );
 
     return result.affectedRows;

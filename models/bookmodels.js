@@ -1,7 +1,7 @@
 import pool from '../config/db.js';
 
 export const fetch = async() => {
-    const [rows] = await pool.query('SELECT * FROM books');
+    const [rows] = await pool.query('SELECT * FROM book');
     return rows;
 };
 
@@ -13,16 +13,13 @@ export const insert = async(book) => {
     return result.insertId;
 };
 
-// UPDATE BOOK
-export const update = async(id, book) => {
+export const update = async(book) => {
     const [result] = await pool.query(
-        'UPDATE books SET name = ?, author = ? WHERE id = ?', [book.name, book.author, id]
+        'UPDATE books SET name = ?, author = ? WHERE id = ?', [book.name, book.author, book.id]
     );
-
     return result.affectedRows;
 };
 
-// DELETE BOOK
 export const remove = async(id) => {
     const [result] = await pool.query(
         'DELETE FROM books WHERE id = ?', [id]

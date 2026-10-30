@@ -10,14 +10,14 @@ export const createbook = async(book) => {
     return bookId;
 };
 
-// UPDATE BOOK
-export const updatebook = async(id, book) => {
-    const result = await bookmodel.update(id, book);
-    return result;
+export const update = async(book) => {
+    const [result] = await pool.query(
+        "Update book SET name= ?, author= ? WHERE id= ? ", [book.name, book.author, book.id]
+    );
+    return result.affectedRows;
 };
 
-// DELETE BOOK
 export const deletebook = async(id) => {
-    const result = await bookmodel.remove(id);
-    return result;
+    const deletedbook = await bookmodel.remove(id);
+    return deletedbook;
 };
