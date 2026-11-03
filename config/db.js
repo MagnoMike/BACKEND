@@ -5,6 +5,7 @@ const pool = mysql.createPool({
     user: 'root',
     password: '',
     database: 'librarydb',
+    port: 3306
 });
 
 export default pool;
