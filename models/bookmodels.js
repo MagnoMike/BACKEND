@@ -7,7 +7,7 @@ export const fetch = async() => {
 
 export const insert = async(book) => {
     const [result] = await pool.query(
-        'INSERT INTO books (name, author) VALUES (?, ?)', [book.name, book.author]
+        'INSERT INTO book (name, author) VALUES (?, ?)', [book.name, book.author]
     );
 
     return result.insertId;
@@ -15,14 +15,14 @@ export const insert = async(book) => {
 
 export const update = async(book) => {
     const [result] = await pool.query(
-        'UPDATE books SET name = ?, author = ? WHERE id = ?', [book.name, book.author, book.id]
+        'UPDATE book SET name = ?, author = ? WHERE id = ?', [book.name, book.author, book.id]
     );
     return result.affectedRows;
 };
 
 export const remove = async(id) => {
     const [result] = await pool.query(
-        'DELETE FROM books WHERE id = ?', [id]
+        'DELETE FROM book WHERE id = ?', [id]
     );
 
     return result.affectedRows;
